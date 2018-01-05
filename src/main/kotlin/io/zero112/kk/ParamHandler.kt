@@ -1,5 +1,6 @@
 package io.zero112.kk
 
+import mu.KotlinLogging
 import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactory
 import java.io.File
 import java.io.FileReader
@@ -9,6 +10,8 @@ import javax.script.ScriptEngine
 
 
 class ParamHandler {
+
+    private val logger = KotlinLogging.logger {}
 
     private fun getPreppedEngine(): ScriptEngine {
         val engine = KotlinJsr223JvmLocalScriptEngineFactory().scriptEngine

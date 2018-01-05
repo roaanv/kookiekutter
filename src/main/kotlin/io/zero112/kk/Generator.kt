@@ -1,6 +1,4 @@
 package io.zero112.kk
-import MainArgs
-import CommandGenerate
 import io.zero112.kk.util.FreemarkerGen
 import io.zero112.kk.util.Stack
 import io.zero112.kk.util.stackOf
