@@ -7,15 +7,6 @@ import java.nio.file.Paths
 
 class Generator {
     fun generate(appArgs: MainArgs, cmdArgs: CommandGenerate) {
-//        val variables = mapOf<String, String>("one" to "1",
-//                "foo" to "bar",
-//                "bar" to "d1/d2",
-//                "f2" to "df1/df2/df2",
-//                "rs" to "root some",
-//                "foo_f1" to "dir = foo, file = f1",
-//                "we" to "root=f2, sub=bar, file=f2.bar")
-
-
         val variables = cmdArgs.vars
         val startDir = cmdArgs.dest
 

@@ -6,11 +6,11 @@
     </encoder>
   </appender>
 
-  <root level="INFO">
+  <root level="DEBUG">
     <appender-ref ref="STDERR"/>
   </root>
 
-  <logger name="io.zero112.kk" level="INFO"/>
+  <logger name="io.zero112.kk" level="DEBUG"/>
 
 
 </configuration>
