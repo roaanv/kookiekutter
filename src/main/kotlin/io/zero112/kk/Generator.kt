@@ -7,7 +7,9 @@ import java.nio.file.Paths
 
 class Generator {
     fun generate(appArgs: MainArgs, cmdArgs: CommandGenerate) {
-        val variables = cmdArgs.vars
+        val variables = TemplateVars()//cmdArgs.vars
+        variables.putAll(cmdArgs.vars)
+
         val startDir = cmdArgs.dest
 
         val targetParent = File(Paths.get(startDir).toAbsolutePath().toString())
@@ -26,7 +28,7 @@ class Generator {
         }
     }
 
-    private fun walkIt(source: File, targetDir: Stack<File>, variables: Map<String, Any>) {
+    private fun walkIt(source: File, targetDir: Stack<File>, variables: TemplateVars) {
         source.list()
                 .asSequence()
                 .map { File(source, it) }
@@ -42,7 +44,7 @@ class Generator {
                 }
     }
 
-    private fun generateFile(template: File, parentDir: Stack<File>, variables: Map<String, Any>) {
+    private fun generateFile(template: File, parentDir: Stack<File>, variables: TemplateVars) {
         val newFile = File(parentDir.peek(), getMappedName(template, variables))
 
         template.copyTo(newFile, overwrite = true)
@@ -50,7 +52,7 @@ class Generator {
         FreemarkerGen.process(newFile, variables)
     }
 
-    private fun generateDir(source: File, targetDir: Stack<File>, variables: Map<String, Any>): File {
+    private fun generateDir(source: File, targetDir: Stack<File>, variables: TemplateVars): File {
         val newDirName = getMappedName(source, variables)
 
         val newDir = File(targetDir.peek(), newDirName)
@@ -65,7 +67,7 @@ class Generator {
         }
     }
 
-    private fun getMappedName(source: File, variables: Map<String, Any>): String {
+    private fun getMappedName(source: File, variables: TemplateVars): String {
         var filenameOnly = source.name
 
         variables.asSequence().forEach {

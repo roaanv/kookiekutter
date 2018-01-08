@@ -16,7 +16,9 @@ class ParamHandler {
     private fun getPreppedEngine(): ScriptEngine {
         val engine = KotlinJsr223JvmLocalScriptEngineFactory().scriptEngine
         val engineSetup = """
-val v = mutableMapOf<String, Any?>()
+import io.zero112.kk.TemplateVars
+
+val v = TemplateVars()
 
 fun getVars(): MutableMap<String,Any?> {
     return v
