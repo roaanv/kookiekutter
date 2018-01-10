@@ -2,10 +2,24 @@ package io.zero112.kk
 
 class TemplateVars : LinkedHashMap<String, Any?>() {
 
+    val PROMPT_POS = 2
+    val DEFAULT_POS = 1
+
     override fun get(key: String): Any? {
         if (key !in super.keys) {
-            print("Enter value for $key: ")
-            val input = readLine()
+            val keyParts = key.split("__")
+
+            var prompt = "Enter value for "
+            prompt += if (keyParts.size >= (PROMPT_POS + 1) && !keyParts[PROMPT_POS].isEmpty()) keyParts[PROMPT_POS] else keyParts[0]
+            prompt += if (keyParts.size >= DEFAULT_POS + 1) " (${keyParts[DEFAULT_POS]})" else ""
+            prompt += ": "
+
+            print(prompt)
+            var input = readLine()
+
+            if ((keyParts.size >= DEFAULT_POS + 1) && input.isNullOrEmpty()) {
+               input = keyParts[DEFAULT_POS]
+            }
 
             super.put(key, input)
         }
