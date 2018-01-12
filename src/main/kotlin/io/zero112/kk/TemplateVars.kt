@@ -15,13 +15,17 @@ class TemplateVars : LinkedHashMap<String, Any?>() {
             prompt += ": "
 
             print(prompt)
-            var input = readLine()
+            val input = readLine()
 
-            if ((keyParts.size >= DEFAULT_POS + 1) && input.isNullOrEmpty()) {
-               input = keyParts[DEFAULT_POS]
+            if (input != null) {
+                if (input.isEmpty()) {
+                    if (keyParts.size >= DEFAULT_POS + 1) {
+                        super.put(key, keyParts[DEFAULT_POS])
+                    }
+                } else {
+                    super.put(key, input)
+                }
             }
-
-            super.put(key, input)
         }
 
         return super.get(key)

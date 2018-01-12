@@ -68,14 +68,7 @@ class Generator {
     }
 
     private fun getMappedName(source: File, variables: TemplateVars): String {
-        var filenameOnly = source.name
-
-        variables.asSequence().forEach {
-            val varName = "\${" + it.key + "}"
-            filenameOnly = filenameOnly.replace(varName, it.value.toString())
-        }
-
-        return filenameOnly
+        return FreemarkerGen.process(source.name, variables)
     }
 }
 
