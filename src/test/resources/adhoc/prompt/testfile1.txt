@@ -10,3 +10,5 @@ Prompt in template with constant ${prompt("noDefault", "defConst")}
 
 Prompt in template with VARIABLE ${prompt("newVar", thingy)}
 Prompted in template var ${newVar}
+
+No default but prompt ${prompt("promptNoDef")}

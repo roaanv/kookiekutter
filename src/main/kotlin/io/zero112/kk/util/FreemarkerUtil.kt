@@ -16,7 +16,11 @@ class FreeMarkerPromptModel (val model: TemplateVars): TemplateMethodModelEx  {
         val key = arguments!![0].toString()
 
         if (!model.containsKey(key)) {
-            model.put(key, Prompt(arguments[1]))
+            if (arguments.size >= 2) {
+                model.put(key, Prompt(arguments[1]))
+            } else {
+                model.put(key, Prompt())
+            }
         }
 
         return model[key]!!
