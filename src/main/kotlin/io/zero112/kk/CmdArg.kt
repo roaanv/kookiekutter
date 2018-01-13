@@ -23,9 +23,18 @@ class CommandGenerate : DefaultArgs() {
             converter = VarsConverter::class)
     var vars = mutableMapOf<String, Any>()
 
+    @Parameter(names= ["-V"],
+        description = "Don't load default params if available")
+    var excludeDefaultVars = false
+
     @Parameter(names = ["-d", "--dest"],
             description = "Directory to write the files to")
     var dest = "."
+
+    @Parameter(names = ["-p", "--prompt"],
+            description = "Prompt for missing variables")
+    var prompt = false
+
 
     @DynamicParameter(names = ["-D"], description = "Specify or override variables")
     var varsOverride = mutableMapOf<String, String>()

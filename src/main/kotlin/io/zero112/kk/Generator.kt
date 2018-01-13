@@ -5,26 +5,25 @@ import io.zero112.kk.util.stackOf
 import java.io.File
 import java.nio.file.Paths
 
-class Generator {
-    fun generate(appArgs: MainArgs, cmdArgs: CommandGenerate) {
-        val variables = TemplateVars()//cmdArgs.vars
-        variables.putAll(cmdArgs.vars)
+val FILES_TO_IGNORE = listOf(DEFAULT_VARS_FILE)
 
-        val startDir = cmdArgs.dest
+class Generator {
+    fun generate(args: GeneratorArgs) {
+        val startDir = args.dest
 
         val targetParent = File(Paths.get(startDir).toAbsolutePath().toString())
 
-        val sourceTemplate = File(cmdArgs.template)
+        val sourceTemplate = File(args.template)
 
         if (!sourceTemplate.exists()) {
-            throw Exception("Template \"${cmdArgs.template}\" does not exist")
+            throw Exception("Template \"${args.template}\" does not exist")
         }
 
         val targetDirStack = stackOf(targetParent)
         if (sourceTemplate.isFile) {
-            generateFile(sourceTemplate, targetDirStack, variables)
+            generateFile(sourceTemplate, targetDirStack, args.vars)
         } else {
-            walkIt(sourceTemplate, targetDirStack, variables)
+            walkIt(sourceTemplate, targetDirStack, args.vars)
         }
     }
 
@@ -34,7 +33,9 @@ class Generator {
                 .map { File(source, it) }
                 .forEach {
                     if (it.isFile) {
-                        generateFile(it, targetDir, variables)
+                        if (it.name !in FILES_TO_IGNORE) {
+                            generateFile(it, targetDir, variables)
+                        }
                     } else {
                         val newDir = generateDir(it, targetDir, variables)
                         targetDir.push(newDir)

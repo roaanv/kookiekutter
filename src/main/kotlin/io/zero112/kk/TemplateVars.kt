@@ -1,11 +1,15 @@
 package io.zero112.kk
 
-class TemplateVars : LinkedHashMap<String, Any?>() {
+class TemplateVars (val promptForMissingVars:Boolean = false): LinkedHashMap<String, Any?>() {
 
     val PROMPT_POS = 2
     val DEFAULT_POS = 1
 
     override fun get(key: String): Any? {
+        if (!promptForMissingVars) {
+            return super.get(key)
+        }
+
         if (key !in super.keys) {
             val keyParts = key.split("__")
 

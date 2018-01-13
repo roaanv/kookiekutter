@@ -1,0 +1,1 @@
+dir = foo, file = f1, KTS=true was foo/f1.txt

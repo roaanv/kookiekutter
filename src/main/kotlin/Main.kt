@@ -1,15 +1,16 @@
 @file:JvmName("Main")
 import io.zero112.kk.CommandGenerate
 import io.zero112.kk.Generator
+import io.zero112.kk.GeneratorArgs
 import io.zero112.kk.MainArgs
 import io.zero112.kk.util.ArgParser
 import mu.KotlinLogging
 
-val LOG = KotlinLogging.logger {}
+val logger = KotlinLogging.logger {}
 
-fun runGenerate(appArgs: MainArgs, cmdArgs: CommandGenerate) {
+fun runGenerate(cmdArgs: CommandGenerate) {
     val generator = Generator()
-    generator.generate(appArgs, cmdArgs)
+    generator.generate(GeneratorArgs(cmdArgs))
 }
 
 fun main(args: Array<String>) {
@@ -17,10 +18,7 @@ fun main(args: Array<String>) {
     parser.run(args, showHelp = true) {appArgs, cmdArgs ->
         when(cmdArgs) {
             is CommandGenerate -> {
-                cmdArgs.varsOverride.forEach{
-                    cmdArgs.vars[it.key] = it.value
-                }
-                runGenerate(appArgs, cmdArgs)
+                runGenerate(cmdArgs)
             }
         }
     }

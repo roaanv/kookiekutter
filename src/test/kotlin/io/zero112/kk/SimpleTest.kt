@@ -21,10 +21,7 @@ class SimpleTest {
         parser.run(args, showHelp = true) {appArgs, cmdArgs ->
             when(cmdArgs) {
                 is CommandGenerate -> {
-                    cmdArgs.varsOverride.forEach{
-                        cmdArgs.vars[it.key] = it.value
-                    }
-                    runGenerate(appArgs, cmdArgs)
+                    runGenerate(cmdArgs)
                 }
             }
         }
