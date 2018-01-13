@@ -29,6 +29,10 @@ class TemplateVars (val promptForMissingVars:Boolean = false): LinkedHashMap<Str
         if (theValue is Prompt) {
             theValue = theValue.getValue(key)
             super.put(key, theValue)
+        } else if (key !in super.keys && promptForMissingVars) {
+            print("(force prompt) Enter value for $key: ")
+            theValue = readLine()
+            super.put(key, theValue)
         }
 
         return theValue
