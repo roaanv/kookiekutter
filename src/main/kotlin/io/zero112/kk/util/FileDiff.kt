@@ -51,7 +51,7 @@ private fun calcDiff(lhsBase: String,
         }
     }
 
-    rhs.forEach { k, v ->
+    rhs.forEach { k, _ ->
         differences.add(Pair(k, "Not in lhs=$lhsBase"))
     }
 

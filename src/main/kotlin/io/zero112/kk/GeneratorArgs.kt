@@ -1,17 +1,17 @@
 package io.zero112.kk
 
 import java.io.File
+import java.lang.System.getenv
 
-val DEFAULT_VARS_FILE = "._kkVars"
 
-class GeneratorArgs (cmdline: CommandGenerate) {
-    val template = cmdline.template
-    val dest = cmdline.dest
-    val vars = setupVars(cmdline)
-    val prompt = cmdline.prompt
+class GeneratorArgs (cmdLine: CommandGenerate) {
+    val template = getTemplate(cmdLine)
+    val dest = cmdLine.dest
+    val vars = setupVars(cmdLine)
+    val prompt = cmdLine.prompt
 
     private fun setupVars(cmdLine: CommandGenerate): TemplateVars {
-        val vars = TemplateVars()
+        val vars = TemplateVars(prompt)
         val defaultVars = loadDefaultVars(cmdLine)
         vars.putAll(defaultVars)
         vars.putAll(cmdLine.vars)
@@ -21,6 +21,19 @@ class GeneratorArgs (cmdline: CommandGenerate) {
         }
 
         return vars
+    }
+
+    private fun getTemplate(cmdLine: CommandGenerate): String {
+        if (File(cmdLine.template).exists()) {
+            return cmdLine.template
+        }
+
+        val defaultTemplateDir = getenv(DEFAULT_TEMPLATE_DIR_ENV_VAR)
+        if (defaultTemplateDir.isNullOrEmpty()) {
+            return cmdLine.template
+        }
+
+        return File(defaultTemplateDir, cmdLine.template).canonicalPath
     }
 
     private fun loadDefaultVars(cmdLine: CommandGenerate): Map<String, Any> {

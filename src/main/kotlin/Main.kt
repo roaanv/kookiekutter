@@ -15,7 +15,7 @@ fun runGenerate(cmdArgs: CommandGenerate) {
 
 fun main(args: Array<String>) {
     val parser = ArgParser("kookiekutter", MainArgs(), "generate" to CommandGenerate())
-    parser.run(args, showHelp = true) {appArgs, cmdArgs ->
+    parser.run(args, showHelp = true) { _, cmdArgs ->
         when(cmdArgs) {
             is CommandGenerate -> {
                 runGenerate(cmdArgs)

@@ -41,12 +41,8 @@ fun getVars(): MutableMap<String,Any?> {
             throw Exception("$filename is not a configuration file")
         }
 
-//        val engine = KotlinJsr223JvmLocalScriptEngineFactory().scriptEngine
         val engine = getPreppedEngine()
-//        engine.put("p", vars)
-//        vars["in"] = -123
         engine.eval(FileReader(filename))
-//        val bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE)
 
         val inv = engine as Invocable
         return inv.invokeFunction("getVars") as MutableMap<String, Any>

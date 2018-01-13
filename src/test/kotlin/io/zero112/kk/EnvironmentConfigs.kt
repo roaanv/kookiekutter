@@ -2,18 +2,26 @@ package io.zero112.kk
 
 import io.zero112.kk.util.ArgParser
 import io.zero112.kk.util.dirDiff
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.Rule
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import runGenerate
 import java.io.File
+import javax.annotation.processing.ProcessingEnvironment
+import org.junit.contrib.java.lang.system.EnvironmentVariables
 
-class SimpleTest : GeneratorTests() {
+
+
+class EnvironmentConfigs : GeneratorTests() {
+    @Rule
+    val environmentVariables = EnvironmentVariables()
 
     @Test
-    fun basicGen() {
+    fun templateDirFromEnv() {
+        environmentVariables.set(DEFAULT_TEMPLATE_DIR_ENV_VAR, "./src/test/resources/")
         val args = arrayOf("generate",
                 "-t",
-                "./src/test/resources/templates/simple/content",
+                "templates/simple/content",
                 "-v",
                 "./src/test/resources/templates/simple/myParam.kts",
                 "-d", getDefaultDest(),
@@ -26,6 +34,7 @@ class SimpleTest : GeneratorTests() {
                 "/tmp/test-out",
                 ".DS_Store")
 
-        assertTrue(differences.isEmpty(), "Difference in expected generation ${differences.forEach { println(it) }}")
+        Assertions.assertTrue(differences.isEmpty(), "Difference in expected generation ${differences.forEach { println(it) }}")
     }
+
 }

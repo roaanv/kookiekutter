@@ -62,12 +62,6 @@ class Generator {
         return newDir
     }
 
-    private fun generateFor(template: File, currDir: File, variables: Map<String, String>) {
-        if (template.isDirectory) {
-
-        }
-    }
-
     private fun getMappedName(source: File, variables: TemplateVars): String {
         return FreemarkerGen.process(source.name, variables)
     }

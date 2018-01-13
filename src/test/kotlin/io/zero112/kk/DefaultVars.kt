@@ -12,32 +12,16 @@ import org.junit.jupiter.api.Assertions
 
 
 
-val TEMPLATE_SOURCE = "./src/test/resources/templates/defaultVars/content"
-val EXPECTED_DIR = "./src/test/resources/templates/defaultVars/expected"
-class DefaultVars {
-
-    private fun runGenerator(args: Array<String>) {
-        val parser = ArgParser("kookiekutter", MainArgs(), "generate" to CommandGenerate())
-        parser.run(args, showHelp = true) {appArgs, cmdArgs ->
-            when(cmdArgs) {
-                is CommandGenerate -> {
-                    runGenerate(cmdArgs)
-                }
-            }
-        }
-    }
+class DefaultVars : GeneratorTests() {
+    val TEMPLATE_SOURCE = "./src/test/resources/templates/defaultVars/content"
+    val EXPECTED_DIR = "./src/test/resources/templates/defaultVars/expected"
 
     @Test
     fun useDefaultVars() {
-        val genDest = File("/tmp/test-out")
-        if (genDest.isDirectory) {
-            genDest.deleteRecursively()
-        }
-
         val args = arrayOf("generate",
                 "-t",
                 TEMPLATE_SOURCE,
-                "-d", genDest.canonicalPath,
+                "-d", getDefaultDest(),
                 "-Drs=overridden")
 
 
@@ -52,15 +36,10 @@ class DefaultVars {
 
     @Test
     fun dontUseDefaultVars() {
-        val genDest = File("/tmp/test-out")
-        if (genDest.isDirectory) {
-            genDest.deleteRecursively()
-        }
-
         val args = arrayOf("generate",
                 "-t",
                 TEMPLATE_SOURCE,
-                "-d", genDest.canonicalPath,
+                "-d", getDefaultDest(),
                 "-V",
                 "-Drs=overridden")
 
