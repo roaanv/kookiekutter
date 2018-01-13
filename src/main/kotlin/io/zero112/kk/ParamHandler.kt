@@ -17,6 +17,7 @@ class ParamHandler {
         val engine = KotlinJsr223JvmLocalScriptEngineFactory().scriptEngine
         val engineSetup = """
 import io.zero112.kk.TemplateVars
+import io.zero112.kk.Prompt
 
 val v = TemplateVars()
 

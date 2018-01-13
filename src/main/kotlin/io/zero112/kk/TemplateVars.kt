@@ -1,37 +1,36 @@
 package io.zero112.kk
 
-class TemplateVars (val promptForMissingVars:Boolean = false): LinkedHashMap<String, Any?>() {
-
-    val PROMPT_POS = 2
-    val DEFAULT_POS = 1
-
-    override fun get(key: String): Any? {
-        if (!promptForMissingVars) {
-            return super.get(key)
-        }
-
-        if (key !in super.keys) {
-            val keyParts = key.split("__")
-
-            var prompt = "Enter value for "
-            prompt += if (keyParts.size >= (PROMPT_POS + 1) && !keyParts[PROMPT_POS].isEmpty()) keyParts[PROMPT_POS] else keyParts[0]
-            prompt += if (keyParts.size >= DEFAULT_POS + 1) " (${keyParts[DEFAULT_POS]})" else ""
-            prompt += ": "
-
-            print(prompt)
-            val input = readLine()
-
-            if (input != null) {
-                if (input.isEmpty()) {
-                    if (keyParts.size >= DEFAULT_POS + 1) {
-                        super.put(key, keyParts[DEFAULT_POS])
-                    }
-                } else {
-                    super.put(key, input)
+class Prompt (val default: Any? = null, val promptString: String = "") {
+    fun getValue(varName: String): String {
+        val promptVarName = if (promptString.isEmpty()) varName else promptString
+        var prompt = "Enter value for $promptVarName"
+        if (default != null) {
+            if (default is String) {
+                if (!default.isNullOrEmpty()) {
+                    prompt += " ($default)"
                 }
+            } else {
+                prompt += " ($default)"
             }
         }
+        prompt += ": "
 
-        return super.get(key)
+        print(prompt)
+        val input = readLine()
+
+        return if (input.isNullOrEmpty()) default?.toString() ?: "" else input!!
+    }
+}
+
+class TemplateVars (val promptForMissingVars:Boolean = false): LinkedHashMap<String, Any?>() {
+    override fun get(key: String): Any? {
+        var theValue = super.get(key)
+
+        if (theValue is Prompt) {
+            theValue = theValue.getValue(key)
+            super.put(key, theValue)
+        }
+
+        return theValue
     }
 }

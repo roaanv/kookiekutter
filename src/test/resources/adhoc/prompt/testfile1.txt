@@ -1,0 +1,12 @@
+The var = ${theVar}
+The var again ${theVar}
+
+and thingy ${thingy}
+
+and with noDefault ${noDefault}
+
+Prompt in template with constant ${prompt("noDefault", "defConst")}
+
+
+Prompt in template with VARIABLE ${prompt("newVar", thingy)}
+Prompted in template var ${newVar}
