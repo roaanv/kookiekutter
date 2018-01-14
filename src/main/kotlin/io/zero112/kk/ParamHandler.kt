@@ -47,6 +47,16 @@ fun getVars(): TemplateVars {
         engine.eval(FileReader(filename))
 
         val inv = engine as Invocable
-        return inv.invokeFunction("getVars") as MutableMap<String, Any>
+        val configuredParams = inv.invokeFunction("getVars") as MutableMap<String, Any>
+        resolveParams(configuredParams)
+        return configuredParams
+    }
+
+    // Attempt to resolve the parameters in the order they were declared
+    private fun resolveParams(data: MutableMap<String, Any>) {
+        for (key: String in data.keys) {
+            println("Querying for $key")
+            val ignored = data[key]
+        }
     }
 }
