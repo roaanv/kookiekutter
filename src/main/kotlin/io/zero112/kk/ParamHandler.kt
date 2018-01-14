@@ -18,6 +18,7 @@ class ParamHandler {
         val engineSetup = """
 import io.zero112.kk.TemplateVars
 import io.zero112.kk.Prompt
+import io.zero112.kk.strReplace
 
 val v = TemplateVars()
 

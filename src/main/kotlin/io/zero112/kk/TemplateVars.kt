@@ -1,6 +1,14 @@
 package io.zero112.kk
 
-class Prompt (val default: Any? = null, val promptString: String = "") {
+fun strReplace(source: Any?, what: String, whith: String): String? {
+    if (source == null) {
+        return null
+    }
+
+    return source.toString().replace(what, whith)
+}
+
+class Prompt (private val default: Any? = null, private val promptString: String = "") {
     fun getValue(varName: String): String {
         val promptVarName = if (promptString.isEmpty()) varName else promptString
         var prompt = "Enter value for $promptVarName"
@@ -23,16 +31,27 @@ class Prompt (val default: Any? = null, val promptString: String = "") {
 }
 
 class TemplateVars (val promptForMissingVars:Boolean = false): LinkedHashMap<String, Any?>() {
+
     override fun get(key: String): Any? {
+        if (key !in super.keys) {
+            if (promptForMissingVars) {
+                print("(force prompt) Enter value for $key: ")
+                val theValue = readLine()
+                super.put(key, theValue)
+
+                return theValue
+            }
+
+            return null
+        }
+
         var theValue = super.get(key)
 
-        if (theValue is Prompt) {
-            theValue = theValue.getValue(key)
-            super.put(key, theValue)
-        } else if (key !in super.keys && promptForMissingVars) {
-            print("(force prompt) Enter value for $key: ")
-            theValue = readLine()
-            super.put(key, theValue)
+        when(theValue) {
+            is Prompt -> {
+                theValue = theValue.getValue(key)
+                super.put(key, theValue)
+            }
         }
 
         return theValue

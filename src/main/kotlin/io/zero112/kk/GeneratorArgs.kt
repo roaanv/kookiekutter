@@ -1,11 +1,12 @@
 package io.zero112.kk
 
+import io.zero112.kk.util.canonicalFile
 import java.io.File
 import java.lang.System.getenv
 
 
 class GeneratorArgs (cmdLine: CommandGenerate) {
-    val template = getTemplate(cmdLine)
+    val template = getTemplatePath(cmdLine)
     val dest = cmdLine.dest
     val vars = setupVars(cmdLine)
     val prompt = cmdLine.prompt
@@ -23,17 +24,18 @@ class GeneratorArgs (cmdLine: CommandGenerate) {
         return vars
     }
 
-    private fun getTemplate(cmdLine: CommandGenerate): String {
-        if (File(cmdLine.template).exists()) {
-            return cmdLine.template
+    private fun getTemplatePath(cmdLine: CommandGenerate): String {
+        var canonicalTemplateFile = canonicalFile(cmdLine.template)
+        if (canonicalTemplateFile.exists()) {
+            return canonicalTemplateFile.canonicalPath
         }
 
         val defaultTemplateDir = getenv(DEFAULT_TEMPLATE_DIR_ENV_VAR)
         if (defaultTemplateDir.isNullOrEmpty()) {
-            return cmdLine.template
+            return canonicalTemplateFile.canonicalPath
         }
 
-        return File(defaultTemplateDir, cmdLine.template).canonicalPath
+        return canonicalFile(cmdLine.template, defaultTemplateDir).canonicalPath
     }
 
     private fun loadDefaultVars(cmdLine: CommandGenerate): Map<String, Any> {
@@ -41,9 +43,9 @@ class GeneratorArgs (cmdLine: CommandGenerate) {
             return mapOf()
         }
 
-        val templateSource = File(cmdLine.template)
-        if (!templateSource.isDirectory) {
-            return mapOf()
+        var templateSource = File(getTemplatePath(cmdLine))
+        if (templateSource.isFile) {
+            templateSource = templateSource.parentFile
         }
 
         val defaultVarsFile = File(templateSource, DEFAULT_VARS_FILE)

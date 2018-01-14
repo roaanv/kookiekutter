@@ -36,6 +36,7 @@ object FreemarkerGen {
         val template = {
             val localCfg = Configuration(Configuration.VERSION_2_3_26)
             localCfg.setDirectoryForTemplateLoading(File(source.parent))
+            localCfg.logTemplateExceptions = false
             localCfg.getTemplate(source.name)
         }()
 
@@ -53,6 +54,7 @@ object FreemarkerGen {
             val templateLoader = StringTemplateLoader()
             templateLoader.putTemplate("default", source)
             localCfg.templateLoader = templateLoader
+            localCfg.logTemplateExceptions = false
             localCfg.getTemplate("default")
         }()
 
