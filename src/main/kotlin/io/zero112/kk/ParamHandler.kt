@@ -20,9 +20,9 @@ import io.zero112.kk.TemplateVars
 import io.zero112.kk.Prompt
 import io.zero112.kk.strReplace
 
-val v = TemplateVars()
+val v = TemplateVars(true)
 
-fun getVars(): MutableMap<String,Any?> {
+fun getVars(): TemplateVars {
     return v
 }
             """
