@@ -3,7 +3,6 @@ package io.zero112.kk.util
 import freemarker.cache.StringTemplateLoader
 import freemarker.template.Configuration
 import freemarker.template.TemplateMethodModelEx
-import io.zero112.kk.Prompt
 import io.zero112.kk.TemplateVars
 import mu.KotlinLogging
 import java.io.File
@@ -17,9 +16,9 @@ class FreeMarkerPromptModel (val model: TemplateVars): TemplateMethodModelEx  {
 
         if (!model.containsKey(key)) {
             if (arguments.size >= 2) {
-                model.put(key, Prompt(arguments[1]))
+                model.put(key, model.prompt(key, default=arguments[1]))
             } else {
-                model.put(key, Prompt())
+                model.put(key, model.prompt(key))
             }
         }
 

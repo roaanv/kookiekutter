@@ -1,9 +1,19 @@
 package io.zero112.kk
 
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
-import org.junit.*
-import java.io.*
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import java.io.PipedInputStream
+import java.io.PipedOutputStream
+import java.io.PrintWriter
+
+
+fun PrintWriter.writeline(value: String = "\n") {
+    write("$value\n")
+    flush()
+}
 
 class TemplateVarsTest {
     val oldInputStream = System.`in`
@@ -11,12 +21,12 @@ class TemplateVarsTest {
     val consoleInput = PipedInputStream()
     val userInput = PrintWriter((PipedOutputStream(consoleInput)))
 
-    @Before
+    @BeforeEach
     fun beforeTests() {
         System.setIn(consoleInput)
     }
 
-    @After
+    @AfterEach
     fun afterTests() {
         System.setIn(oldInputStream)
     }
@@ -27,7 +37,7 @@ class TemplateVarsTest {
         userInput.flush()
         val v = TemplateVars()
 
-        v["promptMe"] = Prompt()
+        v.prompt("promptMe")
 
         val varVal = v["promptMe"]
         assertTrue(varVal is String)
@@ -40,9 +50,9 @@ class TemplateVarsTest {
         userInput.flush()
         val v = TemplateVars()
 
-        v["promptMe"] = Prompt()
+        v.prompt("promptMe")
 
-        v["replaced"] = strReplace(v["promptMe"], "Response", "TheAnswer")
+        v["replaced"] = replace(v["promptMe"], "Response", "TheAnswer")
 
         val varVal = v["promptMe"]
         assertTrue(varVal is String)
@@ -51,5 +61,24 @@ class TemplateVarsTest {
         val replaced = v["replaced"]
         assertTrue(replaced is String)
         assertEquals("testTheAnswer", replaced)
+    }
+
+    @Test
+    fun testPrompt() {
+        val v = TemplateVars()
+        println("Hallo world")
+
+        userInput.writeline("microsService-userInput")
+        userInput.writeline("thingy-userInput")
+        userInput.writeline()
+        with(v) {
+            prompt("microsService")
+            prompt("thingy", "theDefault")
+            prompt("bar", v["microsService"])
+        }
+
+        assertEquals("microsService-userInput", v["microsService"])
+        assertEquals("thingy-userInput", v["thingy"])
+        assertEquals("microsService-userInput", v["bar"])
     }
 }

@@ -17,10 +17,13 @@ class ParamHandler {
         val engine = KotlinJsr223JvmLocalScriptEngineFactory().scriptEngine
         val engineSetup = """
 import io.zero112.kk.TemplateVars
-import io.zero112.kk.Prompt
-import io.zero112.kk.strReplace
+import io.zero112.kk.replace
 
 val v = TemplateVars(true)
+
+fun prompt(varName: String, default: Any? = null, promptString: String? = null) {
+    v.prompt(varName, default=default, promptString=promptString)
+}
 
 fun getVars(): TemplateVars {
     return v
@@ -48,15 +51,6 @@ fun getVars(): TemplateVars {
 
         val inv = engine as Invocable
         val configuredParams = inv.invokeFunction("getVars") as MutableMap<String, Any>
-        resolveParams(configuredParams)
         return configuredParams
-    }
-
-    // Attempt to resolve the parameters in the order they were declared
-    private fun resolveParams(data: MutableMap<String, Any>) {
-        for (key: String in data.keys) {
-            println("Querying for $key")
-            val ignored = data[key]
-        }
     }
 }
